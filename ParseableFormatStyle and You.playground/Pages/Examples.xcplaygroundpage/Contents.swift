@@ -1,39 +1,35 @@
 import UIKit
 
-// MARK: - Parsing Decimals
+// MARK: - Parsing Numbers
 
-try? Decimal.FormatStyle().notation(.scientific).parseStrategy.parse("1E5") // 100000
-try? Decimal.FormatStyle().scale(5).notation(.scientific).parseStrategy.parse("1E5") // 20000
-try? Decimal.FormatStyle().scale(-5).notation(.scientific).parseStrategy.parse("1E5") // -20000
-try? Decimal.FormatStyle.Percent(locale: Locale(identifier: "fr_FR")).parseStrategy.parse("1E5") // 100000
-try? Decimal.FormatStyle.Percent(locale: Locale(identifier: "en_CA")).parseStrategy.parse("1E5") // 100000
+// MARK: Parsing Integers
+try? Int("120", format: .number) // 120
+try? Int("0.25", format: .number) // 0
+try? Int("1E5", format: .number.notation(.scientific)) // 100000
 
-try? Decimal.FormatStyle.Percent().parseStrategy.parse("15%") // 0.15
-try? Decimal.FormatStyle.Percent().scale(2).parseStrategy.parse("100%") // 50
-try? Decimal.FormatStyle.Percent(locale: Locale(identifier: "fr_FR")).parseStrategy.parse("15 %") // 0.15
-try? Decimal.FormatStyle.Percent(locale: Locale(identifier: "en_CA")).parseStrategy.parse("15 %") // 0.15
+// MARK: Parsing Floating Point Numbers
+try? Double("0.0025", format: .number) // 0.0025
+try? Double("95%", format: .number) // 95
+try? Double("95%", format: .percent) // 95
+try? Double("1E5", format: .number.notation(.scientific)) // 100000
 
-try? Decimal.FormatStyle.Currency(code: "GBP")
-    .presentation(.fullName)
-    .parseStrategy.parse("10.00 British pounds") // 10
+try? Float("0.0025", format: .number) // 0.0025
+try? Float("95%", format: .number) // 95
+try? Float("1E5", format: .number.notation(.scientific)) // 100000
 
-try? Decimal.FormatStyle.Currency(code: "GBP", locale: Locale(identifier: "fr_FR"))
-    .presentation(.fullName)
-    .parseStrategy.parse("10,00 livres sterling") // 10
+// MARK: Parsing Decimals
+try? Decimal("0.0025", format: .number) // 0.0025
+try? Decimal("95%", format: .number) // 95
+try? Decimal("1E5", format: .number.notation(.scientific)) // 100000
 
-try? Decimal.FormatStyle.Currency(code: "GBP")
-    .presentation(.fullName)
-    .locale(Locale(identifier: "fr_FR"))
-    .parseStrategy.parse("10,00 livres sterling") // 10
+// MARK: Parsing Percentages
+try? Int("98%", format: .percent) // 98
+try? Float("95%", format: .percent) // 0.95
+try? Decimal("95%", format: .percent) // 0.95
 
-try? Decimal("1E5", strategy: Decimal.FormatStyle().notation(.scientific).parseStrategy) // 100000
-try? Decimal("1E5", format: Decimal.FormatStyle().notation(.scientific)) // 100000
-
-try? Decimal("15%", strategy: Decimal.FormatStyle.Percent().parseStrategy)
-try? Decimal("15%", format: Decimal.FormatStyle.Percent())
-
-try? Decimal("10.00 British pounds", strategy: Decimal.FormatStyle.Currency(code: "GBP").parseStrategy) // 10
-try? Decimal("10.00 British pounds", format: Decimal.FormatStyle.Currency(code: "GBP")) // 10
+// MARK: Parsing Currencies
+try? Decimal("$100.25", format: .currency(code: "USD")) // 100.25
+try? Decimal("100.25 British Points", format: .currency(code: "GBP")) // 100.25
 
 // MARK: - Parsing Dates
 
@@ -120,5 +116,3 @@ try? PersonNameComponents(
     "Dr Elizabeth Jillian Smith Esq.",
     strategy: PersonNameComponents.FormatStyle(style: .long).parseStrategy
 )
-
-rse
